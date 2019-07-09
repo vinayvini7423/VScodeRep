@@ -1,0 +1,153 @@
+<aura:component Controller="FulfillmentPlanControler" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="FulfillmentDetail" type="fullfillment__C"/>
+    <aura:attribute name="PracticePickValue" type="String[]"/>
+    <aura:attribute name="PracticePickValueLocation" type="String[]"/>
+    <aura:attribute name="NumberOfResource" type="Integer" default=""/>
+    <aura:attribute name="Skills" type="String" default=""/>
+    <aura:attribute name="saveEnable" type="String" default="true"/>
+    <aura:attribute name="defaultPicvalue" type="String" default="--None--"/>
+    <aura:attribute name="EnableEdit" type="String" default="Edit"/>
+    <aura:attribute name="SaveORSubmit" type="String" default="Save"/>
+    <aura:attribute name="DelDisable" type="String" default="true"/>
+    <aura:attribute name="EditButoon" type="String" default="false"/>
+
+    
+    
+    
+    <aura:attribute name="rowNum" type="Integer" default="1"/>
+    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <lightning:card>
+        <div class="slds-page-header">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__name">
+                    <div class="slds-page-header__name-title">
+                        <h1>
+                            <span class="slds-page-header__title slds-truncate" title="Fuflfilment Plan Details">Add Fulfilment Plan Details </span>
+                        </h1>
+                    </div></div></div></div>
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer"> 
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col">
+                        <div class="slds-truncate">Practice</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="First Name">Location</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Last Name">Number of resource</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Phone">Skills</div>
+                    </th>
+                </tr>
+            </thead>   
+            <tbody>
+                
+                <tr class="slds-text-title_caps">
+                    <td> 
+                        <ui:inputSelect class="slds-input slds-text-align-center" aura:id="PracSelected"  >
+                            <ui:inputSelectOption text="--None--" label="{!v.defaultPicvalue}" Value="{!v.defaultPicvalue}" />
+                            <aura:iteration items="{! v.PracticePickValue }" var="status" >
+                                <ui:inputSelectOption text="{!status }" label="{!status}"  />
+                            </aura:iteration> 
+                        </ui:inputSelect>
+                    </td>
+                    <td>
+                        <!-- <ui:inputText class="slds-input" value="" aura:id="Location"/> -->
+                        <ui:inputSelect class="slds-input slds-text-align-center" aura:id="Location"  >
+                            <ui:inputSelectOption text="--None--" label="{!v.defaultPicvalue}" Value="{!v.defaultPicvalue}" />
+                            <aura:iteration items="{! v.PracticePickValueLocation }" var="Locations" >
+                                <ui:inputSelectOption text="{!Locations }" label="{!Locations}"  />
+                            </aura:iteration> 
+                        </ui:inputSelect>
+                    </td>
+                    <td>
+                        <ui:inputText class="slds-input" value="{!v.NumberOfResource}" aura:id="NumberOfResource"/>
+                    </td>
+                    <td>
+                        <ui:inputText class="slds-input" value="{!v.Skills}" aura:id="Skills"/>
+                    </td>
+                    <td>
+                        <!--<lightning:icon iconName="utility:add" class="slds-icon slds-icon_small" press="{!c.createRecord}" size="small" alternativeText="add"/>-->
+                        
+                        <ui:button class="slds-button slds-button_brand" label="Add" press="{!c.createRecord}"/>
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table><br/><br/></lightning:card>
+    
+    <lightning:card>
+        
+        <div class="slds-page-header__name">
+            <div class="slds-page-header__name-title">
+                <h1>
+                    <span class="slds-page-header__title slds-truncate" title="Fuflfilment Plan Details List">Fulfilment Plan Details List </span>
+                </h1>
+            </div></div><br/><br/>
+        <!--<button type="button" onclick="{!c.EnableEdit}"  disable = '{!v.EnableEdit}'>Edit</button>-->
+        <ui:button aura:id="button" class="slds-button slds-button_brand" label="Edit" disabled="{!v.EditButoon}" press="{!c.buttonClick}"/>&nbsp;
+        
+        
+        <ui:button aura:id="button" class="slds-button slds-button_brand" label="Cancel" disabled="{!v.bookedEditableVal}" press="{!c.buttonClick}"/>&nbsp;
+        <ui:button aura:id="button" class="slds-button slds-button_brand" label="{!v.SaveORSubmit}"  press="{!c.buttonEdit}"/>&nbsp;
+        
+        <br/><br/>
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer"> 
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col">
+                        <div class="slds-truncate">Practice</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="First Name">Location</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Last Name">Number of resource</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Phone">Skills</div>
+                    </th>
+                </tr>
+            </thead>   
+            <tbody>
+                
+                <aura:iteration items="{!v.FulfillmentDetail}" var="item" indexVar="index">
+                    <tr class="slds-text-title_caps">
+                        <td> 
+                            <!--   <force:inputField class="slds-input"  value="{!item.Practice_List__c}"/>  
+                        <ui:inputText class="slds-input"  value="{!item.Practice_List__c}"/> --> 
+                            <ui:inputSelect class="slds-input slds-text-align-center" disabled="{!v.EnableEdit}">
+                                <aura:iteration items="{! v.PracticePickValue }" var="status" >
+                                    <ui:inputSelectOption text="{! status }" value="{!status == item.Practice_List__c}" />
+                                </aura:iteration> 
+                            </ui:inputSelect>
+                        </td>
+                        <td>
+                            <!--<ui:inputText class="slds-input" value="{!item.Location__c}"/> -->
+                            <ui:inputSelect class="slds-input slds-text-align-center" disabled="{!v.EnableEdit }">
+                                <aura:iteration items="{! v.PracticePickValueLocation }" var="Loc" >
+                                    <ui:inputSelectOption text="{! Loc }" value="{!Loc == item.Location__c}" />
+                                </aura:iteration> 
+                            </ui:inputSelect>
+                        </td>
+                        <td>
+                            <ui:inputText class="slds-input" value="{!item.NoOfResources__c}" disabled="{!v.EnableEdit }"/>
+                        </td>
+                        <td>
+                            <ui:inputText class="slds-input" value="{!item.Skill_Set__c}" disabled="{!v.EnableEdit }"/>
+                        </td>
+                        <td>
+                            <ui:button aura:id="button" class="slds-button slds-button_brand" label="Delete" disabled="{!v.DelDisable}" press="{!c.DeleteRecord}"/>&nbsp;
+                            
+                            <!--<button type="button" label="Delete" press="{!c.DeleteRecord}"  id="{!item.Id}" />-->
+                        </td>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </lightning:card>
+</aura:component>

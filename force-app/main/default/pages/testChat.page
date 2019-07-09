@@ -1,0 +1,58 @@
+<apex:page >
+
+
+<script>
+
+function displaydiv(val)
+{ if(val=='value3')
+{document.getElementById('chk').style.display='block';}
+else{document.getElementById('chk').style.display='none';}
+  if(val=='value2')
+{document.getElementById('loginagent').style.display='block';}
+else{document.getElementById('loginagent').style.display='none';}
+}
+    
+</script>
+
+    <apex:form >
+        Select Issue Type:
+        <apex:selectList id="chooseColor"  onchange="displaydiv(this.value)" size="1">
+            <apex:selectOption itemValue="none" itemLabel="--None--"/>
+            <apex:selectOption itemValue="value1" itemLabel="payment issue agent"/>
+            <apex:selectOption itemValue="value2" itemLabel="login issue agent"/>
+            <apex:selectOption itemValue="value3" itemLabel="order issue agent"/>
+        </apex:selectList>
+    </apex:form>
+        <div id="loginagent" style="display:none;">
+        Agent Status :
+        <script type='text/javascript' src='https://c.la1-c1-ukb.salesforceliveagent.com/content/g/js/44.0/deployment.js'></script>
+        <script type='text/javascript'>
+            liveagent.init('https://d.la1-c1-ukb.salesforceliveagent.com/chat', '5727F000000DLqa', '00D7F000005UTPM');
+        </script>
+        
+        
+        <a id="liveagent_button_online_5737F000000DDIZ" href="javascript://Chat" style="display: none;" onclick="liveagent.startChat('5737F000000DDIZ')"> start chat(Login issue agent) </a><div id="liveagent_button_offline_5737F000000DDIZ" style="display: none;"> agent unavailable</div><script type="text/javascript">
+        if (!window._laq) { window._laq = []; }
+        window._laq.push(function(){liveagent.showWhenOnline('5737F000000DDIZ', document.getElementById('liveagent_button_online_5737F000000DDIZ'));
+                                    liveagent.showWhenOffline('5737F000000DDIZ', document.getElementById('liveagent_button_offline_5737F000000DDIZ'));
+                                   });</script>
+    </div>
+    
+    <div id="chk" style="display:none;">
+        Agent Status:
+        <script type='text/javascript' src='https://c.la1-c1-ukb.salesforceliveagent.com/content/g/js/44.0/deployment.js'></script>
+        <script type='text/javascript'>
+            liveagent.init('https://d.la1-c1-ukb.salesforceliveagent.com/chat', '5727F000000DLqa', '00D7F000005UTPM');
+        </script>
+        
+        
+        <a id="liveagent_button_online_5737F000000DDIZ" href="javascript://Chat" style="display: none;" onclick="liveagent.startChat('5737F000000DDIZ')"> start chat(Login issue agent) </a><div id="liveagent_button_offline_5737F000000DDIZ" style="display: none;"> agent unavailable</div><script type="text/javascript">
+        if (!window._laq) { window._laq = []; }
+        window._laq.push(function(){liveagent.showWhenOnline('5737F000000DDIZ', document.getElementById('liveagent_button_online_5737F000000DDIZ'));
+                                    liveagent.showWhenOffline('5737F000000DDIZ', document.getElementById('liveagent_button_offline_5737F000000DDIZ'));
+                                   });</script>
+    </div>
+
+
+    
+</apex:page>

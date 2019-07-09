@@ -1,0 +1,57 @@
+<apex:page >
+
+<head>
+<script>
+window.onload = function () {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	exportEnabled: true,
+	title: {
+        text: "cases"
+	},
+	axisX: {
+        //title: "Departments"
+	},
+	axisY: {
+		includeZero: false,
+        //title: "Salary in USD",
+      valueFormatString: "DD-MMM" ,
+	labelFormatter: function (e) {
+				return CanvasJS.formatDate( e.value, "DD MMM YY");}
+	}, 
+	data: [{
+		type: "rangeBar",
+		showInLegend: true,
+		//yValueFormatString: "$#0.#K",
+        //indexLabel: "{y[#index]}",
+        //legendText: "Department wise Min and Max Salary",
+		toolTipContent: "<b>{label}</b>: {y[0]} to {y[1]}",
+		dataPoints: [
+			//{ x: 10, y:[12,"20], label: "bye" },
+            { x: 10, y:[1104517800000,1112293800000 ], label: "utilities-Electric" },
+			{ x: 20, y:[1104517800000,1112293800000], label: "PM" },
+			{ x: 30, y:[1104517800000,1112293800000], label: "FAE" },
+			{ x: 40, y:[1104517800000,1112293800000], label: "Design" },
+			{ x: 50, y:[1104517800000,1112293800000], label: "SCM" },
+            //	{ x: 60, y:[new Date(2016, 1, 3), new Date(2016, 2, 3)], label: "Permitting" },
+            //	{ x: 70, y:[new Date(2016, 1, 3), new Date(2016, 2, 3)], label: "Utilities-gas" },
+            //	{ x: 80, y:[new Date(2016, 1, 3), new Date(2016, 2, 3)], label: "Sales" },
+           
+		
+		]
+	}]
+});
+chart.render();
+
+}
+</script>
+</head>
+
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+
+
+</apex:page>

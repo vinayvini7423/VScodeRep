@@ -1,0 +1,131 @@
+<apex:page extensions="FullFillment"  standardController="Opportunity" >
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    
+    <apex:includeScript value="{!$Resource.ExternalJsCDN}"/>
+    <apex:stylesheet value="{!$Resource.ExternalCss}" />
+    <apex:includeScript value="{!$Resource.ExternalJS}"/>
+    <script>
+    function displayEdit(rowNum,rowNum2,val){
+        var x=document.getElementsByClassName(rowNum);
+        var x2=document.getElementsByClassName(rowNum2);
+        
+        var i,j;
+        if(val==1){
+            
+            for (i = 0; i < x.length; i++) { //alert(x[i].style.display.value);
+                x[i].style.display = 'block';}
+            for (j = 0; j < x2.length; j++) {// alert(x2[j].style.display.value);
+                x2[j].style.display = 'none';}
+        }
+        if(val==2){
+            for (i = 0; i < x.length; i++) {//alert(x[i].style.display);
+                x[i].style.display = 'none';}
+            for (j = 0; j < x2.length; j++) {//alert(x[j].style.display);
+                x2[j].style.display = 'block';}
+        }
+    }
+    </script>
+    <style>
+        .dispNone{
+        display:none;
+        }
+        .dispBlock{
+        display:block;
+        }
+        .button {
+          padding: 5px 6px;
+        cursor: pointer;
+        color: #fff;
+        background-color: #4CAF50;
+        border: none;
+        border-radius: 2px;
+        box-shadow: 0 2px #999;
+        }
+        
+        .button:hover {background-color: #3e8e41}
+        
+        
+    </style>
+  
+    <apex:form >
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Practice</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Number of resource</th>
+                    <th scope="col">Skills</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td> <apex:inputField value="{!rowAddData.Practice_List__c}" styleClass="form-control " />
+                    </td>
+                    <td > 
+                        <apex:inputField value="{!rowAddData.region__c}" styleClass="form-control " />
+                    </td>
+                    <td><apex:inputField value="{!rowAddData.res__c}" styleClass="form-control "/>
+                    </td>
+                    <td> <apex:inputField value="{!rowAddData.skills__c}" styleClass="form-control " />
+                    </td>
+                    <td>  <apex:commandButton value="Add"  action="{!addRow}"  styleClass="btn btn-info" reRender="updateRow" ></apex:commandButton></td>
+                    
+                </tr>
+            </tbody>
+        </table>
+        <apex:outputPanel id="updateRow" >
+             <apex:variable value="{!0}" var="rowNum"/>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Practice</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Number of resource</th>
+                        <th scope="col">Skills</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat value="{!fullFillmentWrappeList}" var="wrap" >
+                        
+                        <tr>
+                            <td> <apex:inputField value="{!wrap.FullFillmentRecord.Practice_List__c}" styleClass="form-control  dispNone row{!wrap.index}" />
+                                
+                                <apex:outputText value="{!wrap.FullFillmentRecord.Practice_List__c}" styleClass="form-control   row{!wrap.index}2" />  
+                            </td>
+                            <th > 
+                                <apex:inputField value="{!wrap.FullFillmentRecord.region__c}" styleClass="form-control dispNone row{!wrap.index}" />
+                                <apex:outputText value="{!wrap.FullFillmentRecord.region__c}" styleClass="   row{!wrap.index}2" />
+                            </th>
+                            <td><apex:inputField value="{!wrap.FullFillmentRecord.res__c}" styleClass="form-control dispNone row{!wrap.index}"/>
+                                <apex:outputText value="{!wrap.FullFillmentRecord.res__c}" styleClass="form-control   row{!wrap.index}2" />
+                            </td>
+                            <td> <apex:inputField value="{!wrap.FullFillmentRecord.skills__c}" styleClass="form-control  dispNone row{!wrap.index}" />
+                                
+                                <apex:outputText value="{!wrap.FullFillmentRecord.skills__c}" styleClass="form-control   row{!wrap.index}2" />  
+                            </td>
+                            
+                            <td>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <span class="button  dispNone row{!wrap.index}" style="color:black;width: 27px;" onclick="displayEdit('row{!wrap.index}','row{!wrap.index}2',2)">&#x274C;</span>
+                                        <span class="button glyphicon glyphicon-pencil  row{!wrap.index}2" style="color:black;    width: 27px;" onclick="displayEdit('row{!wrap.index}','row{!wrap.index}2',1)"></span>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <apex:commandButton value="" image="{!URLFOR($Resource.delete1)}" action="{!remove}" style="color:black;padding:0px" styleClass="button glyphicon glyphicon-trash" reRender="updateRow">
+                                            <apex:param value="{!rowNum}" name="rowToRemove" assignTo="{!rowToRemove}"/>
+                                        </apex:commandButton>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+                    </apex:repeat>
+                </tbody>
+            </table>
+        </apex:outputPanel>
+        <apex:commandButton value="Add"  action="{!addRow}"  styleClass="btn btn-info" reRender="updateRow" ></apex:commandButton>
+        <apex:commandButton value="save"  action="{!save}"  styleClass="btn btn-info" reRender="updateRow"></apex:commandButton>
+    </apex:form>
+</apex:page>

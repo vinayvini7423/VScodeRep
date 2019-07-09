@@ -1,0 +1,36 @@
+<aura:component controller="fulfilmentDataController" access="global" >
+    
+    <aura:attribute name="fulfilmentDetails" type="fullfillment__C[]" /> 
+    <aura:attribute name="fulfilment" type="fullfillment__C" default="{
+                                                                      'sobjectType': 'fullfillment__C',
+                                                                      'Practice_List__c': '',
+                                                                      'region__c':'',
+                                                                      'res__c': '', 
+                                                                      'skills__c': ''
+                                                                      }"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="account" type="Account" default="{ 'sobjectType': 'Account' }"/>
+<!-- lookup to lead on account object -->
+<force:inputField aura:id="accNe2" value="{!v.account.Lead__c}"/>
+    
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer"> 
+        <thead>
+            <tr class="slds-text-title_caps">
+                <th scope="col">
+                    <div class="slds-truncate" title="Practice">Practice</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Location">Location</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="PhoNumber of resourcene">Number of resource</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Skills">Skills</div>
+                </th>
+                
+            </tr>
+        </thead>   
+        
+    </table>
+</aura:component>

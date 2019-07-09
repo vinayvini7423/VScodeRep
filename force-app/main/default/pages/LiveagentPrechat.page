@@ -1,0 +1,242 @@
+<!-- VF Page Name: LiveAgentPreChat -->
+<!-- Purpose: Custom Pre-Chat page for Live Agent Chat -->
+<!-- Version: 1.0 -->
+<!-- Author: Comity Designs, Inc. -->
+
+<apex:page id="thePage" showHeader="false" sidebar="false" title="Support Pre-Chat" standardStylesheets="true">
+  <apex:composition template="SC_CustomTemplate">
+    <apex:define name="body">
+
+    <!-- Visualforce Page CSS -->
+    <apex:stylesheet value="{!URLFOR($Resource.LiveAgentResource, '/css/LiveAgent.css')}"/>
+
+     <!--Visualforce Page JAVASCRIPT -->
+    <apex:includeScript value="{!URLFOR($Resource.LiveAgentResource, '/js/liveAgent.js')}"/>
+
+     <form id="prechatForm" method="post">
+      <!-- Header -->
+      <div class="headerContainer container-fluid" align="center">
+        <div class="row" style="padding:30px;">
+          <p class="headerTitle">Welcome to Customer Support</p>
+          <p class="headerSubTitle">We’re here to help.</p>
+        </div>
+      </div>
+
+      <!--START: Customer Input Form Div -->
+      <div class="formContainer container-fluid">
+        <!-- START: Body Section for Input Form -->
+        <div class="bodydiv">
+         <!-- Row for apex:messages -->
+         <div class="row">
+           <apex:outputPanel id="opmsgs">
+            <apex:messages styleClass="msgs" id="pgmsgs" title="Error Messages" />
+           </apex:outputPanel>
+         </div>
+         <!-- START: Row Section for input fields -->
+         <div class="row" >
+           <!-- START: Column Section to display input fields-->
+           <div class="col-md-12" style="margin-left: 5px;margin-right: 10px;">
+              <!-- Header information message -->
+  		        <div class="containerInfo">
+  		         Just tell us a few things about yourself and we’ll be ready to answer all your toughest questions. Ask us anything!
+  		         <br/>
+  		        </div>
+  	          <!-- Required field display -->
+  	          <div align="right" class="requiredInfo">* = required field
+  	          </div>
+
+              <!-- Live Agent Pre-chat Name field used to set Visitor name in Agent's chat window --> 
+              <input type="hidden" name="liveagent.prechat.name" id="visitorName"/>
+
+              <div class="row">
+                <!-- User enters First Name here -->
+                <div class="col-md-6">
+                  <div class="form-group requiredInput">
+  		              <input type="text" class="form-control" name="liveagent.prechat:First Name" 
+  		               id="firstName" placeholder="First Name"/>
+  		              <div class="requiredError" id="firstNameError" style="display:none">
+  		                Enter your first name, please.
+  		              </div>
+                  </div>
+                </div>
+
+                <!-- User enters Last Name here -->
+                <div class="col-md-6">
+                  <div class="form-group requiredInput">
+                    <input type="text" class="form-control" name="liveagent.prechat:Last Name" 
+                    id="lastName" placeholder="Last Name"/>
+                    <div class="requiredError" id="lastNameError" style="display:none">
+                      Enter your last name, please.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- User enters Email here -->
+              <div class="form-group requiredInput">
+                <input type="text" class="form-control" name="liveagent.prechat:Email Address" 
+                 id="email" size="20" placeholder="Email"/>
+                <div class="requiredError" id="emailError" style="display:none">
+                  A valid email address helps us look up your account faster. (No spam, promise.)
+                </div>
+              </div>
+               
+              <!-- User enters Subject here -->
+              <div class="form-group">
+                <label class="labelWithLimit">
+                  <b>How can we help you today?</b>
+                </label>
+                
+                <div class="requiredInput">
+                 
+                    <select  class="form-control" name="liveagent.prechat:Case Subject"  id="subject" >
+                        <option value="Login_Issue">Login issue</option>
+                        <option value="Order_issue">Order issue</option>
+                    </select>
+                  <div class="requiredError" id="subjectError" style="display:none">
+                    We need to know what you need help with to provide awesome support.
+                  </div>
+                </div>
+              </div>
+                    
+              <!-- Map the detail inputs to the Contact fields --> 
+              <input type="hidden" name="liveagent.prechat.findorcreate.map:Contact"
+               value="FirstName,First Name;LastName,Last Name;Email,Email Address;Contact_Origin__c,Contact Origin;"/>
+
+              <!-- Set the Contact Origin to 'Chat' as the input -->
+              <input type="hidden" name="liveagent.prechat:Contact Origin" value="Chat"/>
+
+              <!-- Try to find the Contact by email (exact match) -->
+              <input type="hidden" name="liveagent.prechat.findorcreate.map.doFind:Contact"
+               value="Email,true"/>
+              <input type="hidden" name="liveagent.prechat.findorcreate.map.isExactMatch:Contact"
+               value="Email,true"/>
+
+              <!-- If the Contact is not found, then create one with the following fields set -->
+              <input type="hidden" name="liveagent.prechat.findorcreate.map.doCreate:Contact"
+               value="FirstName,true;LastName,true;Email,true;Contact_Origin__c,true;"/>
+
+              <!-- Show the Contact when it is found or created in a SubTab-->
+              <input type="hidden" name="liveagent.prechat.findorcreate.showOnCreate:Contact"
+               value="true"/>
+
+              <!-- Create a Case every time -->
+              <!-- Map the Case Origin and Status to the proper values during Implementation -->
+              <input type="hidden" name="liveagent.prechat:Case Origin" value="Chat"/>
+              <input type="hidden" name="liveagent.prechat:Case Status" value="Working"/>
+
+              <!-- Map Live Agent Origin, Status fields to the respective Case fields -->
+              <input type="hidden" name="liveagent.prechat.findorcreate.map:Case" 
+               value="Origin,Case Origin;Status,Case Status;Subject,Case Subject;"/>
+
+              <!-- Create a new Case -->
+              <input type="hidden" name="liveagent.prechat.findorcreate.map.doCreate:Case" 
+               value="Origin,true;Status,true;Subject,true;"/>
+
+              <!-- Save transcript to the Case which is created -->   
+              <input type="hidden" name="liveagent.prechat.findorcreate.saveToTranscript:Case" 
+               value="Case"/>
+               
+              <!-- Show the Case when it is found or created in a SubTab -->
+              <input type="hidden" name="liveagent.prechat.findorcreate.showOnCreate:Case" 
+               value="true"/>
+
+              <!-- Link the Contact to the Case -->
+              <input type= "hidden" name="liveagent.prechat.findorcreate.linkToEntity:Contact" 
+               value="Case,ContactId"/>
+
+              <!-- Button to submit chat request to Live Agent and open Chat window -->
+              <div align="center">
+                  
+                <input class="customBtn" type="submit" value="Start Chat" id="prechat_submit"
+                onclick="validateFields();changeButton(); if(fieldValidationError == true) return false;"/>
+              </div>
+           <!-- END: Column Section for input fields -->
+           </div>
+         <!-- END: Row Section for input fields -->
+         </div>
+        <!-- END: Body section of Input Form -->
+        </div>
+      <!-- END: Custom Input Form Div-->
+      </div>
+     </form>
+    </apex:define>
+  </apex:composition>
+
+  <script type="text/javascript">
+    
+    var loaddone='initLoad';
+   function changeButton(){
+       var endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+            //payment issue button id
+            var buttonId='button_id=5737F000000DD9Q';
+            console.log('-buttonId----------'+buttonId);
+            var issueType=document.getElementById('subject').value;
+             console.log('-issueType----------'+issueType);
+         var endpointURL=decodeURIComponent(endpointMatcher.exec(document.location.search)[1]);
+              console.log('------before update endpointURL---'+endpointURL);
+            if(issueType=='Login_Issue'){
+                buttonId='button_id=5737F000000DD9Q';
+                  endpointURL=endpointURL.replace('button_id=5737F000000DDIZ',buttonId);
+                 console.log('-login issue endpointURL endpointURL----------'+endpointURL);
+            }
+          
+          
+             console.log('------after updated ---'+endpointURL);
+           
+            
+            document.getElementById('prechatForm').setAttribute('action', endpointURL );
+        
+   }
+  $j(document).ready(function(){
+      // Concatenate First Name and Last Name and set it to Live Agent hidden pre-chat name field
+      // whenever text in the First Name or Last Name field changes
+      setName();
+
+      // Pre-Chat API Documentation //
+      // SFDC function which handles pre chat form submission //
+      (function() { 
+        function handlePageLoad() {
+           /* 
+            var endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+            //payment issue button id
+            var buttonId='button_id=5737F000000DDIZ';
+             console.log('-----default button-----'+buttonId);
+            var issueType=document.getElementById('subject').value;
+             console.log('-------issue type--------'+issueType);
+            
+            if(issueType='Login_Issue'){
+                buttonId='button_id=5737F000000DD9Q';
+                
+                 console.log('-buttonId----------'+buttonId);
+            }
+             console.log('-before changeing URL end point----------'+decodeURIComponent(endpointMatcher.exec(document.location.search)[1]));
+            var endpointURL=decodeURIComponent(endpointMatcher.exec(document.location.search)[1]);
+            endpointURL=endpointURL.replace('button_id=5737F000000DDIZ',buttonId);
+             console.log('-------after changeing the URL end poin-----'+endpointURL);
+           
+            if(loaddone=='initLoad'){
+                 console.log('init');
+                loaddone='done';
+            document.getElementById('prechatForm').setAttribute('action', endpointURL );
+                console.log('------loading endpoint--------'+document.getElementById('prechatForm').setAttribute('action', endpointURL ));
+                }
+           */ 
+            
+             var endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+          document.getElementById('prechatForm').setAttribute('action',
+          decodeURIComponent(endpointMatcher.exec(document.location.search)[1]));
+
+        } 
+        if (window.addEventListener) {
+          
+          window.addEventListener('load', handlePageLoad, false);
+        } 
+        else { 
+           
+          window.attachEvent('onload', handlePageLoad, false);
+        }
+      })();
+    });
+  </script>
+</apex:page>

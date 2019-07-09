@@ -1,0 +1,30 @@
+<apex:page controller="AccountsDetails"> 
+     <apex:variable value="{!2}" var="rowNum"/>
+    <apex:form >
+        <apex:pageBlock mode="inlineEdit">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"/>
+                
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!accDet}" var="acc">
+                <apex:variable var="rowNum" value="{!rowNum +1}"/>
+                <apex:repeat value="{!$ObjectType.Account.FieldSets.AccountFieldSet}" var="f">
+                    
+                    <apex:column >
+                        <apex:facet name="header">{!f.label}</apex:facet>
+                        <apex:outputField value="{!acc[f]}"/>{!rowNum}
+                            
+                    </apex:column>
+                 
+                </apex:repeat>
+                
+
+            </apex:pageBlockTable>
+            <apex:repeat value="{!accDet}" var="va">
+                {!va.Contacts[0].AccountId}
+            </apex:repeat>
+            <br/>
+        </apex:pageBlock>
+    </apex:form>
+
+</apex:page>

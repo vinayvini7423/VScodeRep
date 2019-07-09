@@ -1,0 +1,232 @@
+<apex:page extensions="AccountsDetails" standardController="Account" showHeader="false" sidebar="false" >
+   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"/>
+    <apex:includeScript value="{!$Resource.ExternalJsCDN}"/>
+    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <apex:includeScript value="{!$Resource.jsStyle}"/>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $('.selectpicker').selectpicker({
+            style: 'btn-info',
+            size: 4
+        });
+        
+    });
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    
+    <apex:includeScript value="{!$Resource.ExternalJsCDN}"/>
+    <apex:stylesheet value="{!$Resource.ExternalCss}" />
+    <apex:includeScript value="{!$Resource.ExternalJS}"/>
+    
+    <style>
+        .dateFormat{
+        display:none;
+        }
+    </style>
+    
+    <script type="text/javascript">
+    jQuery(document).ready(function () {
+        $('.tree').treegrid({
+            initialState:'collapsed'
+        });
+        $.myjQuery = function() {
+            $('.tree').treegrid({
+                initialState:'expanded' 
+            });
+        };
+        $.myjQueryCollapsed = function() {
+            $('.tree').treegrid({
+                initialState:'collapsed'
+            });
+        };
+    });
+    
+    
+    function displaymessage(data1,data2,val){   
+        //alert(data1);
+        var x=document.getElementsByClassName(data1);
+        var x2=document.getElementsByClassName(data2);
+        //alert(data2);
+        var i,j;
+        if(val==1){
+            
+            for (i = 0; i < x.length; i++) {x[i].style.display = 'block';}
+            for (j = 0; j < x2.length; j++) {x2[j].style.display = 'none';}
+        }
+        if(val==2){
+            for (i = 0; i < x.length; i++) {x[i].style.display = 'none';}
+            for (j = 0; j < x2.length; j++) {x2[j].style.display = 'block';}
+        }
+        return ;}
+    
+    function search() {
+        
+        var input, table, i;
+        input = document.getElementById("myInput");
+        table = document.getElementsByClassName('search');
+        input=input.value.toUpperCase();
+        // alert(table.length);
+        for (i = 0; i < table.length; i++) { 
+            //alert(table[i].getElementsByTagName("td").length);
+            if (table[i].textContent.toUpperCase().indexOf(input) > -1)
+            {
+                table[i].style.display = "";
+            } 
+            else 
+            {
+                table[i].style.display = "none";
+            }
+        }
+    }
+    </script>
+    
+    
+    <apex:variable value="{!1}" var="accCount"/>
+    <apex:variable value="{!1}" var="rowNum"/>
+    <apex:variable value="{!1}" var="dateFiledCount"/>
+    
+    <apex:form id="form1">
+        
+        <div class="container-fluid panel-group " >
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-8" >Account Details</div>
+                        <div class="col-sm-4">
+                            <div class="row">
+                                <div class="col-sm-6" ><input type="text" id="myInput" class="form-control"  onkeyup="search()" placeholder="Search.." title="Type name to search" /></div>
+                                <div class="col-sm-6"><apex:commandButton value="save"  action="{!saveAcc}"  styleClass="btn btn-info"></apex:commandButton></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">customize table</button>
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="container-fluid">
+                            
+                        </div>
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <apex:selectList value="{!accountFields}" styleClass="selectpicker" multiselect="true" html-data-live-search="true">
+                                <apex:selectOptions value="{!items}"/>
+                                
+                            </apex:selectList>
+                              <apex:commandButton value="Submit" action="{!test}" />
+                        </div>
+                        
+                    </div>
+                </div>
+                <apex:selectList id="chooseColor"  size="1" styleClass="selectpicker" multiselect="true" >
+                    <apex:selectOption itemValue="red" itemLabel="Red"/>
+                    <apex:selectOption itemValue="white" itemLabel="White"/>
+                    <apex:selectOption itemValue="blue" itemLabel="Blue"/>
+                </apex:selectList> 
+                <select class="selectpicker" multiple="multiple" data-live-search="true" >
+                    <apex:actionSupport event="onclick"  action="{!TestingSri}" rerender="counter" >
+                        <option data-tokens="Account Number">Account Number</option>
+                        <option data-tokens="Account Name">Account Name</option>
+                        <option data-tokens="Account">Account</option>
+                        <option data-tokens="Account Source">Account Source</option>
+                        <option data-tokens="Employees">Employees	</option>
+                        <option data-tokens="Account date">Account date	</option>
+                    </apex:actionSupport>
+                </select>
+
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6"> <apex:messages styleClass="alert alert-danger"/></div>
+                    <div class="col-sm-3"></div>
+                </div>
+                <div class="panel-body  table-responsive ">
+                    <table class="tree table" style="padding: 5px;"  id="example">
+                        <thead>
+                            <tr>
+                                <th> #</th>
+                                <apex:repeat value="{!accFieldsLable}" var="af"><th>{!af}</th></apex:repeat>
+                                <apex:repeat value="{!conFieldsLable}" var="cf"><th>{!cf}</th></apex:repeat>
+                            </tr>
+                        </thead>
+                        <tbody id="tableId">
+                            <apex:repeat value="{!accDet}" var="acc">
+                                <tr class="treegrid-{!rowNum}  search">
+                                    <td></td>
+                                    <apex:repeat value="{!Fields}" var="af1">
+                                        <td>
+                                            <apex:outputPanel id="outputAcc">
+                                                <div ondblclick="displaymessage('{!acc.Id+af1.fieldPath}','{!acc.Id+af1.fieldPath}a',2)">
+                                                    <apex:inputField value="{!acc[af1.fieldPath]}" style="display:none;" styleClass="{!acc.Id+af1.fieldPath} form-control"/>
+                                                </div>
+                                                <div class="{!acc.Id+af1.fieldPath}a" ondblclick="displaymessage('{!acc.Id+af1.fieldPath}','{!acc.Id+af1.fieldPath}a',1)" >
+                                                    <p  style="margin: 0px;">    
+                                                        <abbr title="Double click to Edit" style=" cursor: pointer !important; border-bottom: none !important;  text-decoration: none !important;">
+                                                            <apex:outputText value="{!acc[af1.fieldPath]}" rendered="{!IF(dateFiledCount != accDateIndex, true, false)}"  ></apex:outputText>
+                                                            <apex:outputText value="{0,date,dd MMM YYYY}" rendered="{!IF(dateFiledCount==accDateIndex, true, false)}"   >
+                                                                <apex:param value="{!acc[af1.fieldPath]}"/>
+                                                            </apex:outputText> 
+                                                        </abbr> 
+                                                    </p>
+                                                </div>
+                                            </apex:outputPanel>
+                                            <apex:variable var="dateFiledCount" value="{!dateFiledCount + 1}"/>
+                                        </td>
+                                    </apex:repeat>
+                                    
+                                    <apex:repeat value="{!conFields}" var="cf1">
+                                        <apex:repeat value="{!acc.Contacts[0]}" var="con">
+                                            <td> 
+                                                <apex:outputPanel id="outputCont"> 
+                                                    <div ondblclick="displaymessage('{!con.Id+cf1}','{!con.Id+cf1}a',2)">
+                                                        <apex:inputField value="{!con[cf1]}" style="display:none;" styleClass="{!con.Id+cf1} form-control"/>
+                                                    </div>
+                                                    <div class="{!con.Id+cf1}a" ondblclick="displaymessage('{!con.Id+cf1}','{!con.Id+cf1}a',1)" >
+                                                        <p  style="margin: 0px;">    
+                                                            <abbr title="Double click to Edit" style=" cursor: pointer !important; border-bottom: none !important;  text-decoration: none !important;">
+                                                                <apex:outputText value="{!con[cf1]}" ></apex:outputText>
+                                                            </abbr> 
+                                                        </p>
+                                                    </div>
+                                                </apex:outputPanel> 
+                                            </td>
+                                        </apex:repeat>
+                                    </apex:repeat>
+                                    <td></td>
+                                </tr>
+                                <tr class="treegrid-{!rowNum+1} treegrid-parent-{!rowNum}">
+                                    <td></td>
+                                    <apex:repeat value="{!caseFieldsLable}" var="casef"><th>{!casef}</th></apex:repeat>
+                                </tr>
+                                <apex:repeat value="{!acc.Cases}" var="case">
+                                    <tr class="treegrid-{!rowNum+1} treegrid-parent-{!rowNum}">
+                                        <td></td>
+                                        <apex:repeat value="{!caseFields}" var="casef">
+                                            <td>
+                                                <apex:outputPanel id="outputCase"> 
+                                                    <div ondblclick="displaymessage('{!case.Id+casef}','{!case.Id+casef}a',2)">
+                                                        <apex:inputField value="{!case[casef]}" style="display:none;" styleClass="{!case.Id+casef} form-control"/>
+                                                    </div>
+                                                    <div class="{!case.Id+casef}a" ondblclick="displaymessage('{!case.Id+casef}','{!case.Id+casef}a',1)" >
+                                                        <p  style="margin: 0px;">    
+                                                            <abbr title="Double click to Edit" style=" cursor: pointer !important; border-bottom: none !important;  text-decoration: none !important;">
+                                                                <apex:outputText value="{!case[casef]}" ></apex:outputText>
+                                                            </abbr> 
+                                                        </p>
+                                                    </div>
+                                                </apex:outputPanel> 
+                                            </td>
+                                        </apex:repeat>
+                                    </tr>
+                                </apex:repeat>
+                                <apex:variable var="dateFiledCount" value="1"/>
+                                <apex:variable var="rowNum" value="{!rowNum + 2}"/>
+                                <apex:variable var="accCount" value="{!accCount + 1}"/>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "baseUrl": ".",
+        "paths": {
+            "c/firstCmp": [
+                "firstCmp/firstCmp.js"
+            ],
+            "c/helloWorld": [
+                "helloWorld/helloWorld.js"
+            ],
+            "c/liveAgentWithOmni": [
+                "liveAgentWithOmni/liveAgentWithOmni.js"
+            ],
+            "c/searchContactLWC": [
+                "searchContactLWC/searchContactLWC.js"
+            ],
+            "c/Leaflet": [
+                "../staticresources/Leaflet/Leaflet.js"
+            ],
+            "c/liveAgentOmni": [
+                "liveAgentOmni/liveAgentOmni.js"
+            ],
+            "c/carouselLWC": [
+                "carouselLWC/carouselLWC.js"
+            ]
+        }
+    },
+    "include": [
+        "**/*",
+        "../../../../.sfdx/typings/lwc/**/*.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}

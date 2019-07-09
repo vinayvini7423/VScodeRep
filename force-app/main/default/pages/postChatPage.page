@@ -1,0 +1,92 @@
+<apex:page docType="html-5.0" controller="FiveStarsController" showHeader="false">
+<style>
+
+.star-rating fieldset {
+  font-size:0;
+  white-space:nowrap;
+  display:inline-block;
+  width:250px;
+  height:50px;
+  overflow:hidden;
+  position:relative;
+  background:
+      url('data:image/svg+xml;utf-8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve"><polygon fill="#DDDDDD" points="10,0 13.09,6.583 20,7.639 15,12.764 16.18,20 10,16.583 3.82,20 5,12.764 0,7.639 6.91,6.583 "/></svg>');
+  background-size: contain;
+}
+
+.star-rating input { 
+   -moz-appearance:none;
+   -webkit-appearance:none;
+   opacity: 0;
+   display:inline-block;
+   width: 100%;
+   height: 100%; 
+   margin:0;
+   padding:0;
+   z-index: 2;
+   position: relative;
+}
+
+.star-rating input:hover + label,
+.star-rating input:checked + label {
+     opacity:1;    
+   }
+
+.star-rating label {
+   opacity: 0;
+   position: absolute;
+   left: 0;
+   top: 0;
+   height: 100%;
+   width: 20%;
+   z-index: 4;
+   background: 
+      url('data:image/svg+xml;utf-8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve"><polygon fill="#FFDF88" points="10,0 13.09,6.583 20,7.639 15,12.764 16.18,20 10,16.583 3.82,20 5,12.764 0,7.639 6.91,6.583 "/></svg>');
+   background-size: contain;   
+ }
+
+.star-rating td ~ td label {
+  width: 40%;
+  z-index: 3;  
+}
+.star-rating td ~ td ~ td label {
+  width: 60%;
+  z-index: 2;
+}
+.star-rating td ~ td ~ td ~ td label {
+  z-index: 1;
+  width: 80%;
+}
+.star-rating td ~ td ~ td ~ td ~ td label {
+  z-index: 0;
+  width: 100%;
+}
+</style>
+<!-- Bootstrap core CSS -->
+<apex:stylesheet value="{!URLFOR($Resource.Bootstrap, 'css/bootstrap.min.css')}" /> 
+<div class="form-group row"> 
+  <div class="col-sm-12 ">
+  
+  <h6>
+  <div style="text-align: center">  <span class="text-muted">Please rate your experience with our service agent.</span> </div>
+  </h6>
+  </div>
+</div>
+<br/><br/>
+<apex:outputPanel styleClass="star-rating">
+    
+    <apex:form id="form">
+         <div style="text-align: center"> <!--<apex:outputText value="Please rate your experience with our service agent." /> <br/> -->
+         <!-- <div style="text-align: center">{!if(isnull(rating),'No value selected',text(rating)&' stars')}<br/>  -->
+         <apex:selectRadio value="{!rating}" layout="lineDirection">
+         <apex:actionSupport event="onclick" reRender="form" onsubmit="alert('Thank you for submitting the feedback');window.close();"/>
+            <apex:selectOption itemValue="1"></apex:selectOption>
+            <apex:selectOption itemValue="2"></apex:selectOption>
+            <apex:selectOption itemValue="3"></apex:selectOption>
+            <apex:selectOption itemValue="4"></apex:selectOption>
+            <apex:selectOption itemValue="5"></apex:selectOption>
+        </apex:selectRadio>
+        </div> 
+    </apex:form>    
+</apex:outputPanel> 
+</apex:page>

@@ -1,0 +1,151 @@
+<apex:page showHeader="true" sidebar="false" controller="DF_ReactDemoController">
+   <apex:includeScript value="https://npmcdn.com/react@15.3.1/dist/react.min.js"/>
+   <apex:includeScript value="https://npmcdn.com/react-dom@15.3.1/dist/react-dom.min.js"/>
+   <apex:includeScript value="https://npmcdn.com/babel-core@5.8.38/browser.min.js"/>
+   <apex:includeScript value="https://npmcdn.com/jquery@3.1.0/dist/jquery.min.js"/>
+   <apex:includeScript value="{!URLFOR($Resource.reactjs, 'dist/react-intl.min.js')}"/>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+   <div>
+   <div id="fastVfWithReactDemo"/>
+   </div>
+  <style>
+    #container {
+      padding: 50px;
+      background-color: #FFF;
+    }
+  </style>
+
+   <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, 'css/bootstrap.min.css')}" /> 
+
+  <div id="container"></div>
+ 
+  <script type="text/babel">
+    var IntlMixin = ReactIntl.IntlMixin;
+    var FormattedNumber = ReactIntl.FormattedNumber;
+    var FormattedDate = ReactIntl.FormattedDate;
+   
+    class Getaccount extends React.Component{
+    render(){
+        return(
+           
+            <tr>
+            	 <td>{this.props.acc.Name}</td>
+                 <td>{this.props.acc.Id} </td>
+                 <td>{this.props.acc.Phone}</td>
+                 <td>{this.props.acc.Type}</td>
+                 <td>{this.props.acc.Industry}</td>
+                 <td>{this.props.acc.NumberOfEmployees}</td>
+                 <td>{this.props.acc.Rating}</td>
+            </tr>
+
+        );
+    }
+    }
+   class Account extends React.Component{
+            constructor(props){
+            super(props);
+                this.state={
+                account:[],
+              
+                }
+            // this.searchHandle = this.searchHandle.bind(this);
+            }
+         componentWillMount(){
+             var t=this
+             DF_ReactDemoController.loadAccounts(this.props.searchKey1,
+                 function(result, event) {
+                     if (event.statusCode == 200) {
+                         t.setState({
+                             account: result
+                         });
+                         
+                     }
+                 },
+                 {escape: false, dataType: 'json', timeout: 60000}
+             );
+      }
+     componentWillReceiveProps(){
+      var t=this
+             DF_ReactDemoController.loadAccounts(this.props.searchKey1,
+                 function(result, event) {
+                     if (event.statusCode == 200) {
+                         t.setState({
+                             account: result
+                         });
+                         
+                     }
+                 },
+                 {escape: false, dataType: 'json', timeout: 60000}
+             );
+     }
+      
+      render(){
+          //alert(JSON.stringify(this.state.account));
+          var row=[];
+            this.state.account.forEach(function(a) {
+                row.push(<Getaccount key={a.ID} acc={a} />);
+                // alert(row);
+            });
+          return(
+              <div>
+           
+              <table  className="table " >
+                <th>Account Name </th>
+                    <th>Account Number</th>
+                    <th> Phone Number </th>
+                    <th>Account Type</th>
+                    <th>Industry</th>
+                    <th>Numder of Employees</th>
+                    <th>Ratings</th>
+              {row}
+              </table>
+              </div>
+                );
+          }
+    
+    }
+    
+var App = React.createClass({
+          mixins: [IntlMixin],
+      getInitialState: function() {
+          return {
+            searchKey: '',
+            opptys: [],
+          };
+        }   ,
+                             
+           SearchHandl : function (e){
+           this.setState({
+            searchKey:  e.target.value,
+          });
+           
+           },
+               
+     render: function(){
+      return (
+      <div>
+       
+         <div className="panel panel-primary">
+          <div className="panel-heading">
+                    <div className="row">
+                        <div className="col-sm-10" >Account Details</div>
+                        <div className="col-sm-2">
+                            <input type="text" id="myInput" className="form-control"  onKeyUp={this.SearchHandl} placeholder="Search.." title="Type name to search" />
+                         </div>
+                    </div>
+                </div>
+         
+            <Account searchKey1={this.state.searchKey}/>
+         </div>
+        
+        </div>
+              );
+   }
+});
+ 
+    ReactDOM.render(
+        <App/>,
+      document.querySelector("#container")
+    );
+  </script>
+</apex:page>

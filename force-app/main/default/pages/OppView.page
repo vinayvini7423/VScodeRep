@@ -1,0 +1,12 @@
+<apex:page standardController="Opportunity" >
+<apex:pageBlock title="opportunities">
+<apex:pageBlockSection >
+    <apex:form >
+    <apex:inputField value="{! Opportunity.Name }"/>
+    <apex:inputField value="{! Opportunity.Amount }"/>
+    <apex:inputField value="{! Opportunity.CloseDate }"/>
+    <apex:inputField value="{! Opportunity.Account.name }"/>
+ </apex:form>
+    </apex:pageBlockSection>
+ </apex:pageBlock> 
+</apex:page>

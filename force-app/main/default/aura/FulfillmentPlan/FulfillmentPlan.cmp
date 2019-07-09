@@ -1,0 +1,132 @@
+<aura:component Controller="FulfillmentPlanControler" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="FulfillmentDetail" type="fullfillment__C[]"/>
+    <aura:attribute name="PracticePickValue" type="String[]"/>
+    <aura:attribute name="PracticePickValueLocation" type="String[]"/>
+    <aura:attribute name="NumberOfResource" type="Integer" default=""/>
+    <aura:attribute name="Skills" type="String" default=""/>
+    <aura:attribute name="EnableEdit" type="String" default="false"/>
+    <aura:attribute name="saveEnable" type="String" default="true"/>
+    <aura:attribute name="rowNum" type="Integer" default="1"/>
+    <aura:attribute name="testing" type="String" default="-PracSelect" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer"> 
+        <thead>
+            <tr class="slds-text-title_caps">
+                <th scope="col">
+                    <div class="slds-truncate">Practice</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="First Name">Location</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Last Name">Number of resource</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Phone">Skills</div>
+                </th>
+            </tr>
+        </thead>   
+        <tbody>
+            
+            <tr class="slds-text-title_caps">
+                <td> 
+                    <ui:inputSelect class="slds-input slds-text-align-center" aura:id="PracSelected"  >
+                        <ui:inputSelectOption text="--None--" label="--None--"  />
+                        <aura:iteration items="{! v.PracticePickValue }" var="status" >
+                            <ui:inputSelectOption text="{!status }" label="{!status}"  />
+                        </aura:iteration> 
+                    </ui:inputSelect>
+                </td>
+                <td>
+                   <!-- <ui:inputText class="slds-input" value="" aura:id="Location"/> -->
+                    <ui:inputSelect class="slds-input slds-text-align-center" aura:id="Location"  >
+                         <ui:inputSelectOption text="--None--" label="--None--"  />
+                        <aura:iteration items="{! v.PracticePickValueLocation }" var="Locations" >
+                            <ui:inputSelectOption text="{!Locations }" label="{!Locations}"  />
+                        </aura:iteration> 
+                    </ui:inputSelect>
+                </td>
+                <td>
+                    <ui:inputText class="slds-input" value="{!v.NumberOfResource}" aura:id="NumberOfResource"/>
+                </td>
+                <td>
+                    <ui:inputText class="slds-input" value="{!v.Skills}" aura:id="Skills"/>
+                </td>
+                <td>
+                    <ui:button label="Add" press="{!c.createRecord}"/>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+    <button type="button" onclick="{!c.EnableEdit}"  disable = 'true'>Edit</button>
+    <button type="button" onclick="{!c.SaveEdited}" disable= 'false' >Save</button>
+    <button type="button" onclick="{!c.Cancel}" disable= 'false' >Cancel</button>
+    <br></br>
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer"> 
+        <thead>
+            <tr class="slds-text-title_caps">
+                <th scope="col">
+                    <div class="slds-truncate">Practice</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="First Name">Location</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Last Name">Number of resource</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Phone">Skills</div>
+                </th>
+            </tr>
+        </thead>   
+        <tbody>
+            
+            <aura:iteration items="{!v.FulfillmentDetail}" var="item" indexVar="index">
+                <tr class="slds-text-title_caps">
+                    <td > {!index}
+                        <!--   <force:inputField class="slds-input"  value="{!item.Practice_List__c}"/>  
+                        <ui:inputText class="slds-input"  value="{!item.Practice_List__c}"/> 
+                        <ui:inputSelect class="slds-input slds-text-align-center" disabled="{!v.EnableEdit}" change="{!c.doSomething}" aura:id="index">
+                            <aura:iteration items="{! v.PracticePickValue }" var="status" >
+                                <ui:inputSelectOption text="{! status }" value="{!status == item.Practice_List__c}" />
+                            </aura:iteration> 
+                        </ui:inputSelect> -->
+                        <select onchange="{!c.doSomething}" class="slds-input slds-text-align-center"  id="{!index + v.testing}">
+                             <option value="{!item.Practice_List__c }">{! item.Practice_List__c }</option>
+                            <aura:iteration items="{! v.PracticePickValue }" var="status" >
+                            <option value="{! status }">{! status }</option>
+                                </aura:iteration> 
+                        </select>
+                    </td>
+                    <td>
+                        <!--<ui:inputText class="slds-input" value="{!item.region__c}"/> -->
+                        <ui:inputSelect class="slds-input slds-text-align-center" disabled="{!v.EnableEdit }">
+                            <aura:iteration items="{! v.PracticePickValueLocation }" var="Loc" >
+                                <ui:inputSelectOption text="{! Loc }" value="{!Loc == item.region__c}" />
+                            </aura:iteration> 
+                        </ui:inputSelect>
+                    </td>
+                    <td>
+                        <ui:inputText class="slds-input" value="{!item.res__c}" disabled="{!v.EnableEdit }"/>
+                    </td>
+                    <td>
+                        <ui:inputText class="slds-input" value="{!item.skills__c}" disabled="{!v.EnableEdit }"/>
+                    </td>
+                    <td>
+                        <!-- <aura:if  isTrue="!v.saveEnable"></aura:if> 
+                        <button type="button" onclick="{!c.EnableEdit}"  id="{!item.Id}" >Edit</button>-->
+                    </td>
+                    <td>
+                        <button type="button" onclick="{!c.DeleteRecord}"  id="{!item.Id}" >Delete</button>
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+    
+    
+    
+</aura:component>

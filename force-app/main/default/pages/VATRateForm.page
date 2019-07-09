@@ -1,0 +1,23 @@
+<apex:page controller="VATController">
+    <apex:form >
+        <apex:pageBlock title="query" mode="edit">
+            <apex:pageMessages />
+            <apex:actionfunction name="callUpdateOutComeJS" action="{!save }"  />
+            <apex:pageBlockTable value="{!VATs}" var="v">
+                <apex:column value="{!v.MasterLabel}"/>
+                
+                <apex:column headerValue="Rate">
+                    <apex:inputText value="{!v.Rate__c}"/>
+                </apex:column>
+                <apex:column headerValue="Default">
+                    <apex:inputCheckbox value="{!v.Default__c}"/>
+                </apex:column>
+                <apex:column >
+                      <div>
+                		<button type="button" class="btn btn-success"   onClick="callUpdateOutComeJS();" >save</button>
+            		</div>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

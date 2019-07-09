@@ -1,0 +1,8 @@
+<aura:component>
+    <aura:attribute name="childAttr" type="String" />
+ <aura:registerEvent name="myComponentEvent" type="c:componentEvent"/>
+<lightning:button label="Fire component event" onclick="{! c.fireMyComponentEvent }" />
+    
+    <p>childExpr childAttr hiii: {!v.childAttr}</p>
+    <p><lightning:button label="Update childAttr" onclick="{!c.updateChildAttr}"/></p>
+</aura:component>

@@ -1,0 +1,100 @@
+<apex:page showHeader="false">
+
+  <head>
+    <meta charset="utf-8" />
+    <apex:includeScript value="https://cdn.ckeditor.com/4.4.7/standard/ckeditor.js"/>
+    <!-- Bootstrap core CSS -->
+    <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, 'css/bootstrap.min.css')}" /> 
+    <style>
+    /*This is modifying the btn-primary colors but you could create your own .btn-something class as well*/
+    .btn-primary {
+      color: #ffffff;
+     
+      background-repeat: none;
+    }
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active {
+      color: #ffffff;
+      background-image: none;
+      background-color: #ff0000;
+    }
+    </style>
+  </head>
+
+<!-- This script takes the endpoint URL parameter passed from the deployment page and makes it the action for the form -->
+<script type='text/javascript'> 
+ 
+(function() {
+    function handlePageLoad() {
+        var endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+        var domainMatcher = new RegExp("(https?:\\/\\/(.+?\\.)?(salesforce|salesforceliveagent)\\.com(\\/[A-Za-z0-9\\-\\._~:\\/\\?#\[\\]@!$&'\\(\\)\*\\+,;\\=]*)?)");
+
+        var endpointAttr = endpointMatcher.exec(document.location.search)[1];
+        // if the endpoint domain is valid
+        if (domainMatcher.test(decodeURIComponent(endpointAttr))) {
+            document.getElementById('prechatForm').setAttribute('action',
+                decodeURIComponent(endpointAttr.replace("javascript:", "")));
+        } else {
+            // invalid endpoint domain, set the action to empty
+            console.error("invalid domain: " + endpointAttr);
+            document.getElementById('prechatForm').setAttribute('action', "");
+        }
+    }
+    if (window.addEventListener) {
+        window.addEventListener('load', handlePageLoad, false);
+    } else {
+        window.attachEvent('onload', handlePageLoad, false);
+    }
+})();
+</script>
+<body>
+<div class="container bg-white">
+<!-- Form that gathers information from the chat visitor and sets the values to Live Agent Custom Details used later in the example -->
+<form method='post' id='prechatForm' styleClass="form-horizontal">
+<div class="form-group row"> 
+  <div class="col-sm-12 ">
+ <hr/>
+  <h6>
+    <span class="text-muted">To start, tell us about yourself...</span>
+  </h6>
+  </div>
+</div>
+<br/><br/>
+<div class="form-group row"> 
+  <label class="col-sm-4 col-form-label" for="fName">First Name</label>
+  <div class="col-sm-6 ">
+    <input type="text" name="liveagent.prechat:ContactFirstName" id="firstName" class="form-control input-sm" />
+  </div>
+      
+  <label class="col-sm-4 col-form-label" for="lastName">Last Name</label>
+  <div class="col-sm-6 ">
+    <input type="text" name="liveagent.prechat:ContactLastName" id="lastName" class="form-control input-sm" required="true" />
+  </div>
+</div>
+
+<div class="form-group row"> 
+  <label class="col-sm-4 col-form-label" for="email">Email</label>
+  <div class="col-sm-6 ">
+    <input type="text" name="liveagent.prechat:ContactEmail" id="email" class="form-control input-sm" required="true" />
+  </div>
+
+  <label class="col-sm-4 col-form-label" for="phone">Phone</label>
+  <div class="col-sm-6 ">
+    <input type="text" name="liveagent.prechat:ContactPhone" id="phone" class="form-control input-sm" required="true" />
+  </div>
+
+</div>
+<br/><br/>
+<input type="submit" class="btn-primary btn-block" value="Let's Chat" id='prechat_submit' onclick="setName()"/>
+
+<!-- Set the visitor's name for the agent in the Console to first and last name provided by the customer -->
+<script type="text/javascript">
+   function setName() {
+    document.getElementById("prechat_field_name").value =  
+        document.getElementById("firstName").value + " " + document.getElementById("lastName").value;
+    }
+</script>
+
+</form>
+</div>
+</body>
+</apex:page>

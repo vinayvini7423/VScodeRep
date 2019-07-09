@@ -1,0 +1,22 @@
+<apex:page >
+    <apex:includeScript value="/support/console/44.0/integration.js"/>
+    <script type="text/javascript">
+
+    
+
+        var callback = function(result) { 
+            if (result.success) { 
+                   alert('The custom event is fired!');
+            } else { 
+                   alert('The custom event could not be fired!');
+            } 
+         };
+
+        function testFireEvent() { 
+         //Fire an event of type 'SampleEvent'
+         sforce.console.fireEvent('SampleEvent', 'EventMessage', callback);
+         }
+    </script>
+        <A HREF="#" onClick="testFireEvent(); return false;">
+            Click here to fire an event of type 'SampleEvent'</A>
+</apex:page>

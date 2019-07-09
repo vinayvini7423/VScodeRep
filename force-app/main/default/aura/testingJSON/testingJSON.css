@@ -1,0 +1,9 @@
+.THIS h2{ 
+    background-color:blue;
+}
+.THIS.toggle {
+    display: none;
+}
+.THIS input[type=checkbox]:checked + label{
+  text-decoration: line-through;
+}

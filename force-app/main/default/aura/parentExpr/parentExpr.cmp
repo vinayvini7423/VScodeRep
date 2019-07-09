@@ -1,0 +1,10 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+
+    <aura:attribute name="parentAttr" type="String" default="parent attribute"/>
+	<aura:handler event="c:componentEvent" action="{!c.handleMyComponentEvent}"/>
+       
+    <p>parentExpr parentAttr: {!v.parentAttr}</p>
+    <p><lightning:button label="Update parentAttr"
+          onclick="{!c.updateParentAttr}"/></p>
+   
+</aura:component>

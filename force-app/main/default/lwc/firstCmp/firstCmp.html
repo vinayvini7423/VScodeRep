@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="My first LWC">
+        <lightning-layout vertical-align="center">
+            <lightning-layout-item padding="around-small">
+                <lightning-formatted-text value={name}></lightning-formatted-text>
+                <lightning-formatted-text value={name2}></lightning-formatted-text>
+            </lightning-layout-item>    
+        </lightning-layout>
+    </lightning-card>
+    
+    <div>
+        <lightning-input label="finnd conatct" value={searchKey} onchange={handleChange}></lightning-input>
+       <template for:each={contactRec} for:item="contact">
+           {contact.name}
+       </template>
+    </div>
+</template>

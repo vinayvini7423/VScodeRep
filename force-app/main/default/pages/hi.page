@@ -1,0 +1,459 @@
+<apex:page extensions="ContactSearch" standardController="Account" showHeader="false" sidebar="false" tabStyle="Account">
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <title>Account Details </title>
+        
+        <style>
+            .bg-1 { 
+                font-size: 190%;
+                //background-color: #1abc9c;
+                //color: #ffffff;
+                //text-align: center;
+            }
+        
+        .button {
+            float: left;
+            width: 100%;
+            padding: 5px;
+            background: #2196F3;
+            color: white;
+            font-size: 17px;
+            border: 1px solid grey;
+            border-left: none; /* Prevent double borders */
+            cursor: pointer;
+        }
+        #loader {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 120px;
+        height: 120px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+        }
+        
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        </style>
+        </head>
+        
+        <!-- importing tree grid files -->
+            
+            <apex:includeScript value="{!$Resource.ExternalJsCDN}"/>
+                <apex:stylesheet value="{!$Resource.ExternalCss}" />
+                    <apex:includeScript value="{!$Resource.ExternalJS}"/>
+                        
+                        <!-- importing Bootstrap files -->
+                            <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/> -->
+                                
+                                <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, 'css/bootstrap.min.css')}" />
+                                    
+                                    <!--variable for table row count -->
+                                        
+                                        <apex:variable value="{!2}" var="rowNum"/>
+                                        
+                                        <!--variable for account count to used in saveAccount  function -->
+                                        
+                                        <apex:variable value="{!1}" var="accCount"/>
+                                        
+                                        <!-- tree grid jquery function -->
+                                        
+                                        <script type="text/javascript">
+                                        jQuery(document).ready(function () {
+                                            $('.tree').treegrid({
+                                                initialState:'collapsed'
+                                            });
+                                            $.myjQuery = function() {
+                                                $('.tree').treegrid({
+                                                    initialState:'expanded'
+                                                });
+                                            };
+                                            $.myjQueryCollapsed = function() {
+                                                $('.tree').treegrid({
+                                                    initialState:'collapsed'
+                                                });
+                                            };
+                                        });
+                                               
+                                               function mySearch1() {
+                                                   var input, filter, table,i,count=0;
+                                                   input = document.getElementById("myInput");
+                                                   var filterName =document.getElementById("mySelect").value;
+                                                   
+                                                   if(filterName=="accName"){
+                                                       filter = input.value.toUpperCase();
+                                                       table = document.getElementsByClassName(filterName);//accName  contactSearch 
+                                                       for (i = 0; i < table.length; i++) { 
+                                                           //table[i].getElementsByTagName("td")[0].innerHTML.toUpperCase().indexOf(filter)
+                                                           //table[i].innerHTML.toUpperCase().indexOf(filter) for complete account field filter
+                                                           //only account name filter
+                                                           if (table[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                                                               //alert(table[i].innerHTML());
+                                                               table[i].style.display = "";
+                                                               
+                                                               count--;           
+                                                               //table[i].classList.toggle("treegrid-expander");
+                                                           } else {
+                                                               count++;
+                                                               table[i].style.display = "none";
+                                                               if(count==table.length){
+                                                                   
+                                                               }
+                                                           }
+                                                       }
+                                                   }
+                                                   else if(filterName=="contactSearch"){
+                                                       filter = input.value.toUpperCase();
+                                                       table = document.getElementsByClassName(filterName);//accName  contactSearch
+                                                       $.myjQuery();
+                                                       for (i = 0; i < table.length; i++) {
+                                                           if(filter!=''){
+                                                               if (table[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                                                                   table[i].style.display = ""; 
+                                                                   // table[i].getElementsByTagName("td")[0].style.backgroundColor = 'blue';                           
+                                                               } else {
+                                                                   table[i].style.display = "none";
+                                                               }
+                                                           }
+                                                           else{  table[i].style.display = "none";
+                                                               }
+                                                       }
+                                                       if(filter=='')
+                                                       {   document.getElementById('loader').style.display="block";
+                                                        $.myjQueryCollapsed(); 
+                                                        document.getElementById('loader').style.display="none";
+                                                        //tableAcc = document.getElementsByClassName("accName");
+                                                        //for (i = 0; i < tableAcc.length; i++) {  tableAcc[i].style.display = "";} 
+                                                       }
+                                                   }
+                                                       else if(filterName=='All'){
+                                                           $.myjQueryCollapsed();   
+                                                           
+                                                       }
+                                                           else {
+                                                               alert('search not implemented ');
+                                                           }
+                                               }
+                                               
+                                               </script>
+        <!--script for inline Editor -->
+        
+        <script type="text/javascript">
+        function displaymessage(data1,data2,val){   
+            //alert(data1);
+            var x=document.getElementsByClassName(data1);
+            var x2=document.getElementsByClassName(data2);
+            //alert(data2);
+            var i,j;
+            if(val==1){
+                for (i = 0; i < x.length; i++) {x[i].style.display = 'block';}
+                for (j = 0; j < x2.length; j++) {x2[j].style.display = 'none';}
+            }
+            if(val==2){
+                for (i = 0; i < x.length; i++) {x[i].style.display = 'none';}
+                for (j = 0; j < x2.length; j++) {x2[j].style.display = 'block';}
+            }
+            return ;}
+        
+        
+        
+        
+        </script>
+        <div id="loader" style="display:none"></div>
+        <!-- table table-striped  use bootstrap class for table design  onkeyup="mySearch1()"  <button onclick="mySearch1()">search</button>-->
+        
+        
+        <nav class="navbar navbar-expand-sm bg-light" style="margin-bottom: 0px;">
+            <div class="col-lg-6">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <div class="bg-1" >Account Details 
+                            <a id="liveagent_button_online_5737F000000DCxc" href="javascript://Chat" style="display: none;" onclick="liveagent.startChat('5737F000000DCxc')"><!-- Online Chat Content --></a><div id="liveagent_button_offline_5737F000000DCxc" style="display: none;"><!-- Offline Chat Content --></div><script type="text/javascript">
+                            if (!window._laq) { window._laq = []; }
+                            window._laq.push(function(){liveagent.showWhenOnline('5737F000000DCxc', document.getElementById('liveagent_button_online_5737F000000DCxc'));
+                                                        liveagent.showWhenOffline('5737F000000DCxc', document.getElementById('liveagent_button_offline_5737F000000DCxc'));
+                                                       });</script>
+
+                        </div>
+                    </li>
+                    
+                </ul>
+            </div>
+            <div class="col-lg-6 ">
+                <ul class="navbar-nav float-right">
+                    
+                    <li class="nav-item float-right">
+                        <input type="text" id="myInput" class="form-control mr-sm-2"  placeholder="Search for names.." title="Type name to search" />
+                    </li>
+                    <li class="nav-item float-right" >
+                        <select name="list" class="form-control" id="mySelect" style="height:33px">
+                            <option value="All">All</option>
+                            <option value="accName">Account </option>
+                            <option value="contactSearch">Contact</option>
+                            <option value="oppSearch">Opportunities</option>
+                            <option value="casesSearch">Cases</option>
+                        </select>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="button button5" onclick="mySearch1()">Search</button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <!--
+<div class="form-inline my-2 my-lg-0">
+<h4  class="btn btn-outline-success my-2 my-sm-0" > search </h4> <input type="text" id="myInput" class="form-control mr-sm-2"  onkeyup="mySearch1()" placeholder="Search for names.." title="Type name to search" />
+
+
+Filter by:<select name="list" id="mySelect">
+<option value="accName">Account </option>
+<option value="contactSearch">Contact</option>
+<option value="oppSearch">Opportunities</option>
+<option value="casesSearch">Cases</option>
+</select>
+</div>
+-->
+        <apex:form >
+          <!--  <apex:commandButton value="save" action="{!saveAccount}" ></apex:commandButton> -->
+            <table class="tree table "  style="padding: 5px;"  id="example">
+                <thead class="thead-dark">
+                    <tr >
+                        <th>Account Name </th>
+                        <th>Account Number</th>
+                        <th> Phone Number </th>
+                        <th>Account Type</th>
+                        <th>Industry</th>
+                        <th>Numder of Employees</th>
+                        <th>Ratings</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                
+                <!-- table loop starts from herefor account details --> 
+                
+                <tbody id="tableId">
+                    <apex:repeat value="{!accountData}" var="acc" id="theRepeat">
+                        <tr class="treegrid-{!rowNum} accName contactSearch">
+                            
+                            <td >
+                                <apex:repeat value="{!acc.Contacts}" var="con">
+                                    <p  style="margin: 0px; display:none"> {!con.Name}</p>
+                                </apex:repeat>
+                                <apex:outputField value="{!acc.name} " title="headerValue"/>
+                            </td>
+                            <td>
+                                <apex:outputField value="{!acc.accountnumber}"  />
+                                
+                            </td>
+                            <td>
+                                <apex:outputField value="{!acc.phone}"> <apex:inlineEditSupport event="ondblClick" /></apex:outputField>
+                            </td>
+                            <td><apex:outputField value="{!acc.type}"> <apex:inlineEditSupport event="ondblClick" /></apex:outputField></td>
+                            <td> {!acc.Industry}</td>
+                            <td>
+                                <apex:outputPanel id="output">
+                                    <div ondblclick="displaymessage('{!rowNum}data1','{!rowNum}data2',2)">
+                                        <apex:inputField value="{!acc.NumberOfEmployees}" style="display:none;" styleClass="{!rowNum}data1"/>
+                                        
+                                    </div>
+                                    <div class="{!rowNum}data2" ondblclick="displaymessage('{!rowNum}data1','{!rowNum}data2',1)" >
+                                        <p  style="margin: 0px;">    
+                                            <abbr title="Double click to Edit" style=" cursor: pointer !important; border-bottom: none !important;  text-decoration: none !important;">
+                                                <apex:outputText value="{!acc.NumberOfEmployees}"></apex:outputText>
+                                            </abbr> 
+                                        </p>
+                                    </div>
+                                </apex:outputPanel>
+                                
+                            </td>
+                            <td><apex:outputField value="{!acc.Rating}"> <apex:inlineEditSupport event="ondblClick" /> </apex:outputField></td>
+                            <td>
+                                <div class="dropdown ">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Edit
+                                      </button>
+                                    <ul class="dropdown-menu">
+                                        <li>  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal{!accCount}">Account</button></li>
+                                        <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal{!accCount}">Opportunity</button></li>
+                                        <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal{!accCount}">Case</button></li>
+                                    </ul>
+                                </div>
+                           
+                  
+                                
+                                <!-- Modal -->
+                                <div class="modal fade" id="myModal{!accCount}" role="dialog">
+                                    <div class="modal-dialog">
+                                        
+                                        <!-- Modal content-->
+                                        <div class="modal-content" >
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" >Account Details </h4>
+                                                <button type="button" class="close" data-dismiss="modal" style="margin-top: -15px;">&times;</button>
+                                                
+                                            </div>
+                                            <div class="modal-body" style="font-size:80%">
+                                                <p> Numder of Employees <apex:inputField value="{!acc.NumberOfEmployees}"/></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <apex:commandButton value="save" action="{!saveAccount}" reRender="output" >
+                                                    <apex:param name="accData" value="{!accCount}" assignTo="{!accCount}"/>
+                                                </apex:commandButton>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </td>
+                            
+                        </tr>
+                        
+                        <!-- table loop starts from here for contacts details --> 
+                        
+                        <tr class="treegrid-{!rowNum+2} treegrid-parent-{!rowNum} contactSearch">
+                            <td>Contacts 
+                                <apex:repeat value="{!acc.Contacts}" var="con">
+                                    <p  style="margin: 0px; display:none"> {!con.Name}</p>
+                                </apex:repeat>
+                            </td>
+                        </tr>
+                        <tr class="treegrid-{!rowNum+5} treegrid-parent-{!rowNum+2} contactSearch">
+                         	<th>Name 
+                             <apex:repeat value="{!acc.Contacts}" var="con">
+                                    <p  style="margin: 0px; display:none"> {!con.Name}</p>
+                                </apex:repeat>
+                            </th>
+                            <th>MobilePhone</th>
+                            <th>Email </th>
+                            <th>Department</th>
+                            <th>MailingCountry</th>
+                            <th>Title </th>
+                            <th>Fax </th>
+                            <th>Status</th>
+                        </tr>
+                        <apex:repeat value="{!acc.Contacts}" var="con">
+                            <tr class="treegrid-{!rowNum+5} treegrid-parent-{!rowNum+2} contactSearch">
+                             
+                                <td>
+                                    <div ondblclick="displaymessage('{!con.Id}data1','{!con.Id}data2',2)">
+                                        
+                                        <input type = "text" value = " {!con.Name}" class="{!con.Id}data1" style="display:none" />
+                                    </div>
+                                    <div class="{!con.Id}data2" ondblclick="displaymessage('{!con.Id}data1','{!con.Id}data2',1)" >
+                                        <p  style="margin: 0px;"> {!con.Name}</p>
+                                    </div>
+                                </td>
+                                <td>{!con.MobilePhone} </td>
+                                <td>
+                                   <apex:outputField value="{!con.Email} "> <apex:inlineEditSupport event="ondblClick" /></apex:outputField>
+                                </td>
+                                <td>
+                                <apex:outputField value="{!con.Department} "> <apex:inlineEditSupport event="ondblClick" /></apex:outputField>
+                                </td>
+                                <td>{!con.MailingCountry}</td>
+                                <td>{!con.Title} </td>
+                                <td>{!con.LeadSource}</td>
+                                <td>CleanStatus</td>
+                            </tr>
+                        </apex:repeat>
+                        
+                        <!-- table loop starts from herefor Opportunities details --> 
+                        
+                        
+                        <tr class="treegrid-{!rowNum+3} treegrid-parent-{!rowNum} contactSearch">
+                            <td>Opportunities
+                                <apex:repeat value="{!acc.Contacts}" var="con">
+                                    <p  style="margin: 0px; display:none"> {!con.Name}</p>
+                                </apex:repeat>
+                            </td>
+                        </tr>
+                        <tr class="treegrid-{!rowNum+6} treegrid-parent-{!rowNum+3} contactSearch">
+                            <th>ID 
+                                <apex:repeat value="{!acc.Contacts}" var="con">
+                                    <p  style="margin: 0px; display:none"> {!con.Name}</p>
+                                </apex:repeat>
+                            </th>
+                            <th>Name</th>
+                            <th>Amount</th>
+                        </tr>
+                        <apex:repeat value="{!acc.opportunities}" var="opp">
+                            <tr class="treegrid-{!rowNum+6} treegrid-parent-{!rowNum+3} contactSearch">
+                                <td>{!opp.Id} 
+                                    <apex:repeat value="{!acc.Contacts}" var="con">
+                                        <p  style="margin: 0px; display:none"> {!con.Name}</p>
+                                    </apex:repeat>
+                                </td>
+                                <td>
+                                    <div ondblclick="displaymessage('{!opp.Id}data1','{!opp.Id}data2',2)">
+                                        <apex:inputField value="{!opp.Name}" style="display:none;" styleClass="{!opp.Id}data1" />
+                                        
+                                    </div>
+                                    <div class="{!opp.Id}data2" ondblclick="displaymessage('{!opp.Id}data1','{!opp.Id}data2',1)" >
+                                        <p  style="margin: 0px;"> {!opp.Name}</p>
+                                    </div>
+                                </td>
+                                <td>{!opp.amount}</td>
+                            </tr>
+                        </apex:repeat>
+                        
+                        <!-- table loop starts from herefor Cases details --> 
+                        
+                        
+                        <tr class="treegrid-{!rowNum+4} treegrid-parent-{!rowNum} contactSearch">
+                            <td>Cases
+                                <apex:repeat value="{!acc.Contacts}" var="con">
+                                    <p  style="margin: 0px; display:none"> {!con.Name}</p>
+                                </apex:repeat>
+                            </td>
+                        </tr>
+                        <tr class="treegrid-{!rowNum+7} treegrid-parent-{!rowNum+4} contactSearch">
+                            <th>case Number 
+                                <apex:repeat value="{!acc.Contacts}" var="con">
+                                    <p  style="margin: 0px; display:none"> {!con.Name}</p>
+                                </apex:repeat>
+                            </th>
+                            <th>Type</th>
+                            <th>Status</th>
+                        </tr>
+                        <apex:repeat value="{!acc.Cases}" var="case" >
+                            <tr class="treegrid-{!rowNum+7} treegrid-parent-{!rowNum+4} contactSearch">
+                                <td>{!case.CaseNumber }
+                                    <apex:repeat value="{!acc.Contacts}" var="con">
+                                        <p  style="margin: 0px; display:none"> {!con.Name}</p>
+                                    </apex:repeat>
+                                </td>
+                                <td>{!case.Type}</td>
+                                <td>
+                                    <div ondblclick="displaymessage('{!case.Id}data1','{!case.Id}data2',2)">
+                                        <select name="cars" style="display:none" class="{!case.Id}data1">
+                                            <option value="volvo">New</option>
+                                            <option value="saab">Working</option>
+                                            <option value="opel">Escalated</option>
+                                            <option value="audi">Closed</option>
+                                        </select>
+                                        
+                                    </div>
+                                    <div class="{!case.Id}data2" ondblclick="displaymessage('{!case.Id}data1','{!case.Id}data2',1)" >
+                                        <p  style="margin: 0px;"> {!case.Status}</p>
+                                    </div>
+                                    
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <apex:variable var="rowNum" value="{!rowNum + 8}"/>
+                        <apex:variable var="accCount" value="{!accCount + 1}"/>
+                    </apex:repeat>
+                </tbody>
+            </table>
+        </apex:form>
+    </apex:page>

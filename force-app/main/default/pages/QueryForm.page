@@ -1,0 +1,25 @@
+<apex:page StandardController="query__mdt" extensions="QueryController">
+    <apex:form >
+        <apex:pageBlock title="Queries" mode="edit">
+            <apex:pageMessages />
+         
+            
+            <apex:actionfunction name="callUpdateOutComeJS" action="{!save }"  />
+            <apex:pageBlockTable value="{!Querys}" var="v">
+                <apex:column value="{!v.MasterLabel}"/>
+                
+                <apex:column headerValue="query">
+                    <input type="text"  size="150" value="{!v.dbQuery__c}"/>
+                </apex:column>
+                <apex:column headerValue="Activity Status">
+                    <apex:inputCheckbox value="{!v.Activate__c}"/>
+                </apex:column>
+                <apex:column >
+                      <div>
+                		<button type="button" class="btn btn-success"   onClick="callUpdateOutComeJS();" >save</button>
+            		</div>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
