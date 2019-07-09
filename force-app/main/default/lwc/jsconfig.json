@@ -3,26 +3,32 @@
         "experimentalDecorators": true,
         "baseUrl": ".",
         "paths": {
+            "c/carouselLWC": [
+                "carouselLWC/carouselLWC.js"
+            ],
+            "c/createCase": [
+                "createCase/createCase.js"
+            ],
             "c/firstCmp": [
                 "firstCmp/firstCmp.js"
             ],
-            "c/helloWorld": [
-                "helloWorld/helloWorld.js"
+            "c/ldsUtils": [
+                "ldsUtils/ldsUtils.js"
             ],
-            "c/liveAgentWithOmni": [
-                "liveAgentWithOmni/liveAgentWithOmni.js"
-            ],
-            "c/searchContactLWC": [
-                "searchContactLWC/searchContactLWC.js"
-            ],
-            "c/Leaflet": [
-                "../staticresources/Leaflet/Leaflet.js"
+            "c/list": [
+                "list/list.js"
             ],
             "c/liveAgentOmni": [
                 "liveAgentOmni/liveAgentOmni.js"
             ],
-            "c/carouselLWC": [
-                "carouselLWC/carouselLWC.js"
+            "c/liveAgentWithOmni": [
+                "liveAgentWithOmni/liveAgentWithOmni.js"
+            ],
+            "c/pubsub": [
+                "pubsub/pubsub.js"
+            ],
+            "c/searchContactLWC": [
+                "searchContactLWC/searchContactLWC.js"
             ]
         }
     },
